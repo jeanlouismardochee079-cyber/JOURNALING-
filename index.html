@@ -12,7 +12,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #0B0F19; color: #E5E7EB; }
         .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.2); }
         .card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(55, 65, 81, 0.5); border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .nav-link { transition: all 0.2s ease; }
+        .nav-link { transition: all 0.2s ease; cursor: pointer; }
         .nav-link:hover, .nav-link.active { background: #1E293B; color: #3B82F6; border-left: 3px solid #3B82F6; }
         .btn { padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; transition: background 0.2s; cursor: pointer; border: none; }
         .btn-primary { background: #3B82F6; color: white; }
@@ -33,15 +33,15 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-gray-900/90 backdrop-blur-md border-r border-gray-800 flex flex-col p-4 space-y-6">
         <div class="text-2xl font-bold text-blue-500 flex items-center gap-2 px-2"><i class="fas fa-chart-line"></i> TradeLog</div>
-        <nav class="flex flex-col space-y-1">
-            <a href="#" onclick="navigate('dashboard')" class="nav-link active flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="#" onclick="navigate('journal')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-book"></i> Journal</a>
-            <a href="#" onclick="navigate('analytics')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-chart-pie"></i> Analytics</a>
-            <a href="#" onclick="navigate('playbook')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-play"></i> Playbook</a>
-            <a href="#" onclick="navigate('calendar')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-calendar-alt"></i> Calendrier</a>
-            <a href="#" onclick="navigate('psychology')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-brain"></i> Psychologie</a>
-            <a href="#" onclick="navigate('goals')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-bullseye"></i> Objectifs</a>
-            <a href="#" onclick="navigate('settings')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300"><i class="fas fa-cog"></i> Paramètres</a>
+        <nav class="flex flex-col space-y-1" id="sidebarNav">
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="journal"><i class="fas fa-book"></i> Journal</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="playbook"><i class="fas fa-play"></i> Playbook</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="calendar"><i class="fas fa-calendar-alt"></i> Calendrier</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="psychology"><i class="fas fa-brain"></i> Psychologie</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="goals"><i class="fas fa-bullseye"></i> Objectifs</a>
+            <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300" data-page="settings"><i class="fas fa-cog"></i> Paramètres</a>
         </nav>
         <div class="mt-auto text-gray-500 text-sm px-3"><i class="far fa-user-circle"></i> Trader Pro</div>
     </aside>
@@ -52,8 +52,8 @@
         <div id="page-dashboard" class="page">
             <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
             <div class="flex gap-3 mb-6">
-                <button class="btn btn-primary" onclick="openAddTradeModal()"><i class="fas fa-plus"></i> Ajouter un trade</button>
-                <button class="btn btn-danger" onclick="resetData()"><i class="fas fa-trash-alt"></i> Réinitialiser</button>
+                <button class="btn btn-primary" id="openModalBtn"><i class="fas fa-plus"></i> Ajouter un trade</button>
+                <button class="btn btn-danger" id="resetDataBtn"><i class="fas fa-trash-alt"></i> Réinitialiser</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div class="glass p-4 rounded-xl"><p class="text-sm text-gray-400">Solde</p><p class="text-2xl font-bold">10 000,00 €</p></div>
@@ -79,13 +79,13 @@
         <!-- Journal -->
         <div id="page-journal" class="page hidden-page">
             <h1 class="text-3xl font-bold mb-6">Journal des trades</h1>
-            <button class="btn btn-primary mb-4" onclick="openAddTradeModal()"><i class="fas fa-plus"></i> Ajouter un trade</button>
+            <button class="btn btn-primary mb-4" id="openModalBtn2"><i class="fas fa-plus"></i> Ajouter un trade</button>
             <div class="overflow-x-auto glass rounded-xl">
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-800">
                         <tr>
-                            <th class="p-3">Date</th><th class="p-3">Heure</th><th class="p-3">Actif</th><th class="p-3">Direction</th><th class="p-3">Entrée</th><th class="p-3">SL</th><th class="p-3">TP</th><th class="p-3">Sortie</th>
-                            <th class="p-3">Volume</th><th class="p-3">R:R</th><th class="p-3">Profit</th><th class="p-3">%</th><th class="p-3">Setup</th><th class="p-3">Émotions</th><th class="p-3"></th>
+                            <th class="p-3">Date</th><th class="p-3">Heure</th><th class="p-3">Actif</th><th class="p-3">Dir.</th><th class="p-3">Entrée</th><th class="p-3">SL</th><th class="p-3">TP</th><th class="p-3">Sortie</th>
+                            <th class="p-3">Vol.</th><th class="p-3">R:R</th><th class="p-3">Profit</th><th class="p-3">%</th><th class="p-3">Setup</th><th class="p-3">Émotion</th><th class="p-3"></th>
                         </tr>
                     </thead>
                     <tbody id="tradeTableBody"></tbody>
@@ -123,17 +123,17 @@
 <div id="addTradeModal" class="modal hidden-page">
     <div class="modal-content card">
         <h2 class="text-2xl font-bold mb-4">Ajouter un trade</h2>
-        <form id="tradeForm" onsubmit="return false;">
+        <form id="tradeForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div><label>Date</label><input type="date" id="tradeDate" required></div>
                 <div><label>Heure</label><input type="time" id="tradeTime" required></div>
                 <div><label>Actif</label><input type="text" id="tradeSymbol" placeholder="EUR/USD" required></div>
                 <div><label>Direction</label><select id="tradeDirection"><option value="Long">Long</option><option value="Short">Short</option></select></div>
-                <div><label>Prix d'entrée</label><input type="number" step="any" id="tradeEntry" required oninput="computeAuto()"></div>
+                <div><label>Prix d'entrée</label><input type="number" step="any" id="tradeEntry" required></div>
                 <div><label>Stop Loss</label><input type="number" step="any" id="tradeSL" placeholder="Optionnel"></div>
                 <div><label>Take Profit</label><input type="number" step="any" id="tradeTP" placeholder="Optionnel"></div>
-                <div><label>Prix de sortie</label><input type="number" step="any" id="tradeExit" required oninput="computeAuto()"></div>
-                <div><label>Volume (lots)</label><input type="number" step="any" id="tradeVolume" value="1.0" required oninput="computeAuto()"></div>
+                <div><label>Prix de sortie</label><input type="number" step="any" id="tradeExit" required></div>
+                <div><label>Volume (lots)</label><input type="number" step="any" id="tradeVolume" value="1.0" required></div>
                 <div class="md:col-span-2">
                     <label>Setup / Stratégie</label>
                     <input type="text" id="tradeSetup" placeholder="ICT, SMC...">
@@ -151,186 +151,192 @@
                 <div><label>R:R</label><input type="text" id="tradeRR" class="readonly" readonly></div>
             </div>
             <div class="flex justify-end gap-3 mt-4">
-                <button type="button" class="btn btn-danger" onclick="closeAddTradeModal()">Annuler</button>
-                <button type="submit" class="btn btn-primary" onclick="saveTrade()">Enregistrer le trade</button>
+                <button type="button" class="btn btn-danger" id="cancelModalBtn">Annuler</button>
+                <button type="submit" class="btn btn-primary">Enregistrer le trade</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    // ---------- DONNÉES ----------
-    let trades = JSON.parse(localStorage.getItem('trades')) || [];
+    (function() {
+        // ---------- DONNÉES ----------
+        let trades = JSON.parse(localStorage.getItem('trades')) || [];
+        let currentPage = 'dashboard';
 
-    // ---------- NAVIGATION ----------
-    function navigate(page) {
-        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden-page'));
-        document.getElementById('page-' + page).classList.remove('hidden-page');
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        const links = document.querySelectorAll(`[onclick="navigate('${page}')"]`);
-        if (links.length) links[0].classList.add('active');
-        if (page === 'journal') populateJournal();
-        if (page === 'dashboard') refreshChartsAndKPIs();
-    }
-
-    // ---------- MODAL ----------
-    function openAddTradeModal() {
-        document.getElementById('addTradeModal').classList.remove('hidden-page');
-        document.getElementById('tradeDate').valueAsDate = new Date();
-        document.getElementById('tradeTime').value = new Date().toTimeString().slice(0,5);
-        document.getElementById('tradeVolume').value = '1.0';
-        computeAuto();
-    }
-
-    function closeAddTradeModal() {
-        document.getElementById('addTradeModal').classList.add('hidden-page');
-        document.getElementById('tradeForm').reset();
-    }
-
-    // ---------- CALCULS AUTOMATIQUES ----------
-    function computeAuto() {
-        const entry = parseFloat(document.getElementById('tradeEntry').value);
-        const exit = parseFloat(document.getElementById('tradeExit').value);
-        const volume = parseFloat(document.getElementById('tradeVolume').value);
-        const direction = document.getElementById('tradeDirection').value;
-        const sl = parseFloat(document.getElementById('tradeSL').value);
-        const tp = parseFloat(document.getElementById('tradeTP').value);
-
-        // Valeurs par défaut
-        if (isNaN(entry) || isNaN(exit) || isNaN(volume)) return;
-
-        // Profit en pips (simplifié : pour forex, 1 pip = 0.0001 sauf paires JPY)
-        const isJPY = document.getElementById('tradeSymbol').value.toUpperCase().includes('JPY');
-        const pipValue = isJPY ? 0.01 : 0.0001;
-        let profitPips;
-        if (direction === 'Long') {
-            profitPips = (exit - entry) / pipValue;
-        } else {
-            profitPips = (entry - exit) / pipValue;
+        // ---------- STOCKAGE ----------
+        function saveTrades() {
+            localStorage.setItem('trades', JSON.stringify(trades));
         }
 
-        // Profit monétaire : 1 lot standard = 10 unités de devise par pip (simplifié)
-        const pipMonetaryValue = 10; // € par pip pour un lot standard (pour EUR/USD en compte EUR, c'est proche)
-        const profitAmount = profitPips * volume * pipMonetaryValue;
+        // ---------- NAVIGATION ----------
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden-page'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.remove('hidden-page');
 
-        // % gain sur capital (par rapport à l'entrée)
-        const percent = (profitAmount / (entry * volume * 100000)) * 100; // capital engagé approximatif
-        // Formule plus simple : % = (exit - entry)/entry * 100 pour Long, inverse pour Short
-        let percentSimple;
-        if (direction === 'Long') {
-            percentSimple = ((exit - entry) / entry) * 100;
-        } else {
-            percentSimple = ((entry - exit) / entry) * 100;
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`[data-page="${page}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            currentPage = page;
+            if (page === 'journal') populateJournal();
+            if (page === 'dashboard') refreshDashboard();
         }
 
-        // R:R (si SL et TP fournis)
-        let rr = '';
-        if (!isNaN(sl) && !isNaN(tp) && sl !== entry) {
-            const risk = Math.abs(entry - sl);
-            const reward = Math.abs(tp - entry);
-            rr = risk > 0 ? (reward / risk).toFixed(2) : '0';
+        // Attacher les événements de navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                if (page) navigate(page);
+            });
+        });
+
+        // ---------- MODAL ----------
+        const modal = document.getElementById('addTradeModal');
+        const form = document.getElementById('tradeForm');
+        const openModalBtns = [document.getElementById('openModalBtn'), document.getElementById('openModalBtn2')];
+        const cancelBtn = document.getElementById('cancelModalBtn');
+
+        function openModal() {
+            modal.classList.remove('hidden-page');
+            document.getElementById('tradeDate').valueAsDate = new Date();
+            document.getElementById('tradeTime').value = new Date().toTimeString().slice(0,5);
+            document.getElementById('tradeVolume').value = '1.0';
+            computeAuto();
         }
 
-        document.getElementById('tradeProfit').value = profitAmount.toFixed(2) + ' €';
-        document.getElementById('tradePercent').value = percentSimple.toFixed(2) + ' %';
-        document.getElementById('tradeRR').value = rr;
-    }
-
-    // ---------- SAUVEGARDE TRADE ----------
-    function saveTrade() {
-        const entry = parseFloat(document.getElementById('tradeEntry').value);
-        const exit = parseFloat(document.getElementById('tradeExit').value);
-        const volume = parseFloat(document.getElementById('tradeVolume').value);
-        const symbol = document.getElementById('tradeSymbol').value;
-        const direction = document.getElementById('tradeDirection').value;
-        if (isNaN(entry) || isNaN(exit) || isNaN(volume) || !symbol) {
-            alert('Veuillez remplir tous les champs obligatoires.');
-            return;
+        function closeModal() {
+            modal.classList.add('hidden-page');
+            form.reset();
         }
 
-        // Recalculer profit et percent pour stockage
-        const isJPY = symbol.toUpperCase().includes('JPY');
-        const pipValue = isJPY ? 0.01 : 0.0001;
-        let profitPips = direction === 'Long' ? (exit - entry) / pipValue : (entry - exit) / pipValue;
-        const profitAmount = profitPips * volume * 10;
-        const percent = direction === 'Long' ? ((exit - entry) / entry) * 100 : ((entry - exit) / entry) * 100;
+        openModalBtns.forEach(btn => btn && btn.addEventListener('click', openModal));
+        cancelBtn.addEventListener('click', closeModal);
 
-        const sl = parseFloat(document.getElementById('tradeSL').value);
-        const tp = parseFloat(document.getElementById('tradeTP').value);
-        let rr = '';
-        if (!isNaN(sl) && !isNaN(tp) && sl !== entry) {
-            const risk = Math.abs(entry - sl);
-            const reward = Math.abs(tp - entry);
-            rr = risk > 0 ? (reward / risk).toFixed(2) : '0';
+        // ---------- CALCULS AUTOMATIQUES ----------
+        function computeAuto() {
+            const entry = parseFloat(document.getElementById('tradeEntry').value);
+            const exit = parseFloat(document.getElementById('tradeExit').value);
+            const volume = parseFloat(document.getElementById('tradeVolume').value);
+            const direction = document.getElementById('tradeDirection').value;
+            const sl = parseFloat(document.getElementById('tradeSL').value);
+            const tp = parseFloat(document.getElementById('tradeTP').value);
+
+            if (isNaN(entry) || isNaN(exit) || isNaN(volume)) {
+                document.getElementById('tradeProfit').value = '';
+                document.getElementById('tradePercent').value = '';
+                document.getElementById('tradeRR').value = '';
+                return;
+            }
+
+            // Calcul des pips (simplifié)
+            const isJPY = document.getElementById('tradeSymbol').value.toUpperCase().includes('JPY');
+            const pipValue = isJPY ? 0.01 : 0.0001;
+            let profitPips = direction === 'Long' ? (exit - entry) / pipValue : (entry - exit) / pipValue;
+            const profitAmount = profitPips * volume * 10; // 10 € par pip pour 1 lot
+
+            const percent = direction === 'Long' ? ((exit - entry) / entry) * 100 : ((entry - exit) / entry) * 100;
+
+            let rr = '';
+            if (!isNaN(sl) && !isNaN(tp) && sl !== entry) {
+                const risk = Math.abs(entry - sl);
+                const reward = Math.abs(tp - entry);
+                rr = risk > 0 ? (reward / risk).toFixed(2) : '0';
+            }
+
+            document.getElementById('tradeProfit').value = profitAmount.toFixed(2) + ' €';
+            document.getElementById('tradePercent').value = percent.toFixed(2) + ' %';
+            document.getElementById('tradeRR').value = rr;
         }
 
-        const trade = {
-            id: Date.now(),
-            date: document.getElementById('tradeDate').value,
-            time: document.getElementById('tradeTime').value,
-            symbol: symbol,
-            direction: direction,
-            entry: entry,
-            sl: sl || null,
-            tp: tp || null,
-            exit: exit,
-            volume: volume,
-            profit: profitAmount,
-            pct: percent,
-            rr: rr || '',
-            setup: document.getElementById('tradeSetup').value,
-            emotion: document.getElementById('tradeEmotion').value,
-            notes: document.getElementById('tradeNotes').value
+        // Attacher les événements "input" pour le calcul automatique
+        ['tradeEntry','tradeExit','tradeVolume','tradeSL','tradeTP','tradeDirection','tradeSymbol'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', computeAuto);
+        });
+
+        // ---------- SAUVEGARDE TRADE ----------
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const entry = parseFloat(document.getElementById('tradeEntry').value);
+            const exit = parseFloat(document.getElementById('tradeExit').value);
+            const volume = parseFloat(document.getElementById('tradeVolume').value);
+            const symbol = document.getElementById('tradeSymbol').value;
+            const direction = document.getElementById('tradeDirection').value;
+            if (isNaN(entry) || isNaN(exit) || isNaN(volume) || !symbol) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
+            // Recalculer les valeurs finales
+            const isJPY = symbol.toUpperCase().includes('JPY');
+            const pipValue = isJPY ? 0.01 : 0.0001;
+            let profitPips = direction === 'Long' ? (exit - entry) / pipValue : (entry - exit) / pipValue;
+            const profitAmount = profitPips * volume * 10;
+            const percent = direction === 'Long' ? ((exit - entry) / entry) * 100 : ((entry - exit) / entry) * 100;
+
+            const sl = parseFloat(document.getElementById('tradeSL').value);
+            const tp = parseFloat(document.getElementById('tradeTP').value);
+            let rr = '';
+            if (!isNaN(sl) && !isNaN(tp) && sl !== entry) {
+                const risk = Math.abs(entry - sl);
+                const reward = Math.abs(tp - entry);
+                rr = risk > 0 ? (reward / risk).toFixed(2) : '0';
+            }
+
+            const trade = {
+                id: Date.now(),
+                date: document.getElementById('tradeDate').value,
+                time: document.getElementById('tradeTime').value,
+                symbol: symbol,
+                direction: direction,
+                entry: entry,
+                sl: sl || null,
+                tp: tp || null,
+                exit: exit,
+                volume: volume,
+                profit: profitAmount,
+                pct: percent,
+                rr: rr || '',
+                setup: document.getElementById('tradeSetup').value,
+                emotion: document.getElementById('tradeEmotion').value,
+                notes: document.getElementById('tradeNotes').value
+            };
+
+            trades.push(trade);
+            saveTrades();
+            closeModal();
+            refreshAll();
+        });
+
+        // ---------- SUPPRESSION ET RÉINITIALISATION ----------
+        window.deleteTrade = function(id) {
+            if (confirm('Supprimer ce trade ?')) {
+                trades = trades.filter(t => t.id !== id);
+                saveTrades();
+                refreshAll();
+            }
         };
 
-        trades.push(trade);
-        localStorage.setItem('trades', JSON.stringify(trades));
-        closeAddTradeModal();
-        refreshAll();
-    }
+        document.getElementById('resetDataBtn').addEventListener('click', function() {
+            if (confirm('Effacer TOUS les trades ?')) {
+                trades = [];
+                saveTrades();
+                refreshAll();
+            }
+        });
 
-    function deleteTrade(id) {
-        if (confirm('Supprimer ce trade ?')) {
-            trades = trades.filter(t => t.id !== id);
-            localStorage.setItem('trades', JSON.stringify(trades));
-            refreshAll();
-        }
-    }
-
-    function resetData() {
-        if (confirm('Effacer TOUS les trades ?')) {
-            trades = [];
-            localStorage.setItem('trades', JSON.stringify(trades));
-            refreshAll();
-        }
-    }
-
-    // ---------- AFFICHAGE ----------
-    function populateJournal() {
-        const tbody = document.getElementById('tradeTableBody');
-        if (trades.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="15" class="p-4 text-center text-gray-500">Aucun trade. Ajoutez-en un.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = trades.map(t => `
-            <tr class="border-b border-gray-700 hover:bg-gray-800/50">
-                <td class="p-3">${t.date}</td>
-                <td class="p-3">${t.time || '-'}</td>
-                <td class="p-3 font-semibold">${t.symbol}</td>
-                <td class="p-3 ${t.direction==='Long'?'text-green-400':'text-red-400'}">${t.direction}</td>
-                <td class="p-3">${t.entry}</td>
-                <td class="p-3">${t.sl || '-'}</td>
-                <td class="p-3">${t.tp || '-'}</td>
-                <td class="p-3">${t.exit}</td>
-                <td class="p-3">${t.volume}</td>
-                <td class="p-3">${t.rr || '-'}</td>
-                <td class="p-3 ${t.profit>=0?'text-green-400':'text-red-400'} font-bold">${t.profit.toFixed(2)} €</td>
-                <td class="p-3">${t.pct.toFixed(2)}%</td>
-                <td class="p-3">${t.setup || '-'}</td>
-                <td class="p-3">${t.emotion || '-'}</td>
-                <td class="p-3"><button class="btn btn-danger text-xs py-1 px-2" onclick="deleteTrade(${t.id})"><i class="fas fa-trash"></i></button></td>
-            </tr>
-        `).join('');
-    }
-
-    function computeKPIs() 
+        // ---------- AFFICHAGE ----------
+        function populateJournal() {
+            const tbody = document.getElementById('tradeTableBody');
+            if (trades.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="15" class="p-4 text-center text-gray-500">Aucun trade. Ajoutez-en un.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = trades.map(t => `
+                <tr class="border-b border-gray-700 hover:bg-gray-800/50">
+                    <td class="p-3">${t.date}</td>
+                    <td class="p-3">${t.time || '-'}</td>
+         
