@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal de Trading Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Police Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0B0F19; color: #E5E7EB; }
+        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .card { @apply bg-gray-800/40 backdrop-blur-md border border-gray-700/50 rounded-2xl shadow-xl; }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover, .nav-link.active { background: #1E293B; color: #3B82F6; border-left: 3px solid #3B82F6; }
+        .btn { @apply px-4 py-2 rounded-lg font-semibold transition; }
+        .btn-primary { background: #3B82F6; color: white; }
+        .btn-primary:hover { background: #2563EB; }
+        canvas { width: 100% !important; height: auto !important; }
+    </style>
+</head>
+<body class="antialiased">
+<div class="flex h-screen overflow-hidden">
+    <!-- Barre latérale -->
+    <aside class="w-64 bg-gray-900/90 backdrop-blur-md border-r border-gray-800 flex flex-col p-4 space-y-6">
+        <div class="text-2xl font-bold text-blue-500 flex items-center gap-2 px-2">
+            <i class="fas fa-chart-line"></i> TradeLog
+        </div>
+        <nav class="flex flex-col space-y-1">
+            <a href="#" onclick="navigate('dashboard')" class="nav-link active flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="#" onclick="navigate('journal')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-book"></i> Journal
+            </a>
+            <a href="#" onclick="navigate('analytics')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-chart-pie"></i> Analytics
+            </a>
+            <a href="#" onclick="navigate('playbook')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-play"></i> Playbook
+            </a>
+            <a href="#" onclick="navigate('calendar')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-calendar-alt"></i> Calendrier
+            </a>
+            <a href="#" onclick="navigate('psychology')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-brain"></i> Psychologie
+            </a>
+            <a href="#" onclick="navigate('goals')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-bullseye"></i> Objectifs
+            </a>
+            <a href="#" onclick="navigate('settings')" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300">
+                <i class="fas fa-cog"></i> Paramètres
+            </a>
+        </nav>
+        <div class="mt-auto text-gray-500 text-sm px-3">
+            <i class="far fa-user-circle"></i> Trader Pro
+        </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        <!-- Page Dashboard (par défaut) -->
+        <div id="page-dashboard" class="page">
+            <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+            <!-- KPIs -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="glass p-4 rounded-xl"><p class="text-sm text-gray-400">Solde</p><p class="text-2xl font-bold">10 562,45 €</p></div>
+                <div class="glass p-4 rounded-xl"><p class="text-sm text-gray-400">Equity</p><p class="text-2xl font-bold">10 612,20 €</p></div>
+                <div class="glass p-4 rounded-xl"><p class="text-sm text-gray-400">P&L Net</p><p class="text-2xl font-bold text-green-500">+1 234,56 €</p></div>
+                <div class="glass p-4 rounded-xl"><p class="text-sm text-gray-400">Win Rate</p><p class="text-2xl font-bold text-blue-400">62,3%</p></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                <div class="glass p-3 rounded-xl"><p class="text-xs text-gray-400">Profit Factor</p><p class="text-lg font-bold">1,89</p></div>
+                <div class="glass p-3 rounded-xl"><p class="text-xs text-gray-400">Expectancy</p><p class="text-lg font-bold">18,40 €</p></div>
+                <div class="glass p-3 rounded-xl"><p class="text-xs text-gray-400">Trades</p><p class="text-lg font-bold">156</p></div>
+                <div class="glass p-3 rounded-xl"><p class="text-xs text-gray-400">Max DD</p><p class="text-lg font-bold text-red-400">-320,50 €</p></div>
+                <div class="glass p-3 rounded-xl"><p class="text-xs text-gray-400">RR moyen</p><p class="text-lg font-bold">1,8</p></div>
+            </div>
+            <!-- Graphiques -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass p-4 rounded-xl"><canvas id="equityCurve"></canvas></div>
+                <div class="glass p-4 rounded-xl"><canvas id="dailyPnL"></canvas></div>
+                <div class="glass p-4 rounded-xl"><canvas id="winLossDonut"></canvas></div>
+                <div class="glass p-4 rounded-xl"><canvas id="marketPie"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Autres pages cachées par défaut -->
+        <div id="page-journal" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Journal des trades</h1>
+            <div class="overflow-x-auto glass rounded-xl">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th class="p-3">Date</th><th class="p-3">Actif</th><th class="p-3">Direction</th><th class="p-3">Entrée</th><th class="p-3">SL</th><th class="p-3">TP</th><th class="p-3">Sortie</th>
+                            <th class="p-3">R:R</th><th class="p-3">Profit</th><th class="p-3">%</th><th class="p-3">Setup</th><th class="p-3">Émotions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradeTableBody">
+                        <!-- Lignes générées en JS -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary mt-4" onclick="addTrade()"><i class="fas fa-plus"></i> Ajouter un trade</button>
+        </div>
+
+        <div id="page-analytics" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Analytics</h1>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="analyticsCards"></div>
+            <div class="glass p-4 rounded-xl"><canvas id="monthlyPerformance"></canvas></div>
+        </div>
+
+        <div id="page-playbook" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Playbook</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="playbookContainer"></div>
+        </div>
+
+        <div id="page-calendar" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Calendrier économique</h1>
+            <div class="glass rounded-xl overflow-x-auto" id="calendarTable"></div>
+        </div>
+
+        <div id="page-psychology" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Psychologie</h1>
+            <p>Graphique des émotions, journal de bord...</p>
+        </div>
+
+        <div id="page-goals" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Objectifs</h1>
+            <div class="glass p-4 rounded-xl">Progression vers objectif mensuel...</div>
+        </div>
+
+        <div id="page-settings" class="page hidden">
+            <h1 class="text-3xl font-bold mb-6">Paramètres</h1>
+            <p>Thème, notifications, etc.</p>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Données simulées (trades réalistes)
+    const simulatedTrades = [
+        { date: '2026-07-01', symbol: 'EUR/USD', direction: 'Long', entry: 1.0810, sl: 1.0780, tp: 1.0870, exit: 1.0855, rr: 2.3, profit: 45, pct: 0.42, setup: 'ICT', emotion: 'Confiant' },
+        { date: '2026-07-01', symbol: 'XAU/USD', direction: 'Short', entry: 2340, sl: 2350, tp: 2320, exit: 2325, rr: 1.5, profit: 15, pct: 0.64, setup: 'SMC', emotion: 'Neutre' },
+        { date: '2026-07-02', symbol: 'GBP/JPY', direction: 'Long', entry: 199.50, sl: 198.80, tp: 200.80, exit: 200.60, rr: 1.1, profit: 110, pct: 0.55, setup: 'Breakout', emotion: 'Excité' },
+        { date: '2026-07-02', symbol: 'BTC/USD', direction: 'Long', entry: 61000, sl: 60500, tp: 62000, exit: 61800, rr: 1.6, profit: 800, pct: 1.31, setup: 'Trend', emotion: 'Confiant' },
+        { date: '2026-07-03', symbol: 'US30', direction: 'Short', entry: 34120, sl: 34250, tp: 33800, exit: 33900, rr: 1.7, profit: 220, pct: 0.64, setup: 'S/R', emotion: 'Stressé' },
+        { date: '2026-07-05', symbol: 'EUR/USD', direction: 'Short', entry: 1.0890, sl: 1.0910, tp: 1.0850, exit: 1.0855, rr: 1.75, profit: 35, pct: 0.32, setup: 'ICT', emotion: 'Neutre' },
+        { date: '2026-07-06', symbol: 'XAU/USD', direction: 'Long', entry: 2360, sl: 2345, tp: 2385, exit: 2380, rr: 1.67, profit: 20, pct: 0.85, setup: 'SMC', emotion: 'Confiant' },
+    ];
+
+    // Stockage local
+    let trades = JSON.parse(localStorage.getItem('trades')) || simulatedTrades;
+    localStorage.setItem('trades', JSON.stringify(trades));
+
+    // Navigation
+    function navigate(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById('page-' + page).classList.remove('hidden');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelector(`[onclick="navigate('${page}')"]`).classList.add('active');
+    }
+
+    // Remplissage journal
+    function populateJournal() {
+        const tbody = document.getElementById('tradeTableBody');
+        tbody.innerHTML = trades.map(t => `
+            <tr class="border-b border-gray-700">
+                <td class="p-3">${t.date}</td><td class="p-3 font-semibold">${t.symbol}</td>
+                <td class="p-3 ${t.direction==='Long'?'text-green-400':'text-red-400'}">${t.direction}</td>
+                <td class="p-3">${t.entry}</td><td class="p-3">${t.sl}</td><td class="p-3">${t.tp}</td><td class="p-3">${t.exit}</td>
+                <td class="p-3">${t.rr}</td>
+                <td class="p-3 ${t.profit>=0?'text-green-400':'text-red-400'}">${t.profit>=0?'+':''}${t.profit}€</td>
+                <td class="p-3">${t.pct}%</td><td class="p-3">${t.setup}</td><td class="p-3">${t.emotion}</td>
+            </tr>
+        `).join('');
+    }
+
+    // KPIs analytics
+    function computeAnalytics() {
+        const wins = trades.filter(t => t.profit > 0);
+        const losses = trades.filter(t => t.profit < 0);
+        const winRate = (wins.length / trades.length * 100).toFixed(1);
+        const totalPnL = trades.reduce((s,t) => s + t.profit, 0);
+        const avgWin = wins.length ? (wins.reduce((s,t)=>s+t.profit,0)/wins.length).toFixed(2) : 0;
+        const avgLoss = losses.length ? (losses.reduce((s,t)=>s+t.profit,0)/losses.length).toFixed(2) : 0;
+        const profitFactor = losses.length ? Math.abs(avgWin/avgLoss).toFixed(2) : '∞';
+        const expectancy = (winRate/100 * avgWin + (1-winRate/100) * avgLoss).toFixed(2);
+        const maxDrawdown = trades.reduce((acc, t) => {
+            acc.equity += t.profit;
+            if (acc.equity > acc.peak) acc.peak = acc.equity;
+            const dd = acc.peak - acc.equity;
+            if (dd > acc.maxDD) acc.maxDD = dd;
+            return acc;
+        }, {equity: 10500, peak: 10500, maxDD: 0}).maxDD.toFixed(2);
+        document.getElementById('analyticsCards').innerHTML = `
+            <div class="glass p-3 rounded-xl"><p class="text-xs">Win Rate</p><p class="text-xl">${winRate}%</p></div>
+            <div class="glass p-3 rounded-xl"><p class="text-xs">Profit Factor</p><p class="text-xl">${profitFactor}</p></div>
+            <div class="glass p-3 rounded-xl"><p class="text-xs">Expectancy</p><p class="text-xl">${expectancy}€</p></div>
+            <div class="glass p-3 rounded-xl"><p class="text-xs">Max DD</p><p class="text-xl text-red-400">-${maxDrawdown}€</p></div>
+        `;
+    }
+
+    // Graphiques Dashboard
+    function renderCharts() {
+        // Équité cumulée
+        let cum = 10500;
+        const equityData = trades.map(t => cum += t.profit);
+        new Chart(document.getElementById('equityCurve'), {
+            type: 'line', data: { labels: trades.map((_,i)=>i+1), datasets: [{ label:'Équité', data: equityData, borderColor: '#3B82F6', tension:0.2 }] },
+            options: { responsive:true, scales:{ y:{ beginAtZero:false} } }
+        });
+        // P&L quotidien
+        const dates = [...new Set(trades.map(t=>t.date))].sort();
+        const dailyPnL = dates.map(d => trades.filter(t=>t.date===d).reduce((s,t)=>s+t.profit,0));
+        new Chart(document.getElementById('dailyPnL'), {
+            type: 'bar', data: { labels: dates, datasets: [{ label:'P&L/jour', data: dailyPnL, backgroundColor: dailyPnL.map(v=>v>=0?'#22C55E':'#EF4444') }] }
+        });
+        // Donut Win/Loss
+        new Chart(document.getElementById('winLossDonut'), {
+            type: 'doughnut', data: { labels:['Gagnants','Perdants'], datasets:[{ data:[trades.filter(t=>t.profit>0).length, trades.filter(t=>t.profit<0).length], backgroundColor:['#22C55E','#EF4444'] }] }
+        });
+        // Marché
+        const markets = {};
+        trades.forEach(t => { const m = t.symbol.includes('/') ? 'Forex' : t.symbol.startsWith('XAU') ? 'Or' : t.symbol.startsWith('BTC') ? 'Crypto' : 'Indices'; markets[m] = (markets[m]||0)+1; });
+        new Chart(document.getElementById('marketPie'), {
+            type: 'pie', data: { labels: Object.keys(markets), datasets:[{ data: Object.values(markets), backgroundColor:['#3B82F6','#F59E0B','#8B5CF6','#EC4899'] }] }
+        });
+    }
+
+    // Calendrier économique simulé
+    function populateCalendar() {
+        const events = [
+            { time:'14:30', currency:'USD', impact:'Élevé', event:'ISM Services', forecast:'52.5', previous:'51.8', result:'53.2' },
+            { time:'16:00', currency:'EUR', impact:'Moyen', event:'Discours Lagarde', forecast:'-', previous:'-', result:'-' },
+            { time:'08:00', currency:'GBP', impact:'Faible', event:'Production industrielle', forecast:'0.3%', previous:'-0.1%', result:'0.4%' },
+        ];
+        document.getElementById('calendarTable').innerHTML = `
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-800"><tr><th class="p-3">Heure</th><th>Devise</th><th>Impact</th><th>Événement</th><th>Prévision</th><th>Précédent</th><th>Résultat</th></tr></thead>
+                <tbody>${events.map(e=>`
+                    <tr class="border-b border-gray-700">
+                        <td class="p-3">${e.time}</td><td class="p-3">${e.currency}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded-full text-xs ${e.impact==='Élevé'?'bg-red-500':'bg-yellow-500'}">${e.impact}</span></td>
+                        <td class="p-3">${e.event}</td><td class="p-3">${e.forecast}</td><td class="p-3">${e.previous}</td><td class="p-3 font-bold">${e.result}</td>
+                    </tr>`).join('')}</tbody>
+            </table>`;
+    }
+
+    // Playbook
+    const strategies = [
+        { name: 'ICT', trades: 45, winRate: 68, profitFactor: 2.1 },
+        { name: 'SMC', trades: 30, winRate: 60, profitFactor: 1.7 },
+        { name: 'Breakout', trades: 35, winRate: 55, profitFactor: 1.4 },
+        { name: 'S/R', trades: 25, winRate: 65, profitFactor: 1.9 },
+    ];
+    function populatePlaybook() {
+        document.getElementById('playbookContainer').innerHTML = strategies.map(s => `
+            <div class="glass p-4 rounded-xl">
+                <h3 class="text-xl font-bold">${s.name}</h3>
+                <p>Trades: ${s.trades}</p><p>Win Rate: ${s.winRate}%</p><p>Profit Factor: ${s.profitFactor}</p>
+            </div>`).join('');
+    }
+
+    // Ajout d'un trade (simulé)
+    function addTrade() {
+        const newTrade = {
+            date: new Date().toISOString().slice(0,10),
+            symbol: 'EUR/USD',
+            direction: 'Long',
+            entry: 1.0850,
+            sl: 1.0820,
+            tp: 1.0900,
+            exit: 1.0890,
+            rr: 1.33,
+            profit: 40,
+            pct: 0.47,
+            setup: 'ICT',
+            emotion: 'Neutre'
+        };
+        trades.push(newTrade);
+        localStorage.setItem('trades', JSON.stringify(trades));
+        populateJournal();
+        alert('Trade ajouté !');
+    }
+
+    // Initialisation
+    populateJournal();
+    computeAnalytics();
+    renderCharts();
+    populateCalendar();
+    populatePlaybook();
+</script>
+</body>
+  </html>
